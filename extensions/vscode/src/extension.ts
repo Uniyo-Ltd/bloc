@@ -22,6 +22,7 @@ import {
   wrapWithRepositoryProvider,
 } from "./commands";
 import { analyzeDependencies, setShowContextMenu } from "./utils";
+import { reportDiagnostics } from "./diagnostics";
 
 const DART_MODE = { language: "dart", scheme: "file" };
 
@@ -30,9 +31,13 @@ export function activate(_context: ExtensionContext) {
     analyzeDependencies();
   }
 
-  setShowContextMenu();
+  const diagnostics = languages.createDiagnosticCollection("bloc");
+  const root = workspace.workspaceFolders![0].uri.path;
+  reportDiagnostics(root, diagnostics);
 
+  setShowContextMenu();
   _context.subscriptions.push(
+    diagnostics,
     window.onDidChangeActiveTextEditor((_) => setShowContextMenu()),
     workspace.onDidChangeWorkspaceFolders((_) => setShowContextMenu()),
     workspace.onDidChangeTextDocument(async function (event) {
@@ -44,40 +49,40 @@ export function activate(_context: ExtensionContext) {
     commands.registerCommand("extension.new-cubit", newCubit),
     commands.registerCommand(
       "extension.convert-multibloclistener",
-      convertToMultiBlocListener,
+      convertToMultiBlocListener
     ),
     commands.registerCommand(
       "extension.convert-multiblocprovider",
-      convertToMultiBlocProvider,
+      convertToMultiBlocProvider
     ),
     commands.registerCommand(
       "extension.convert-multirepositoryprovider",
-      convertToMultiRepositoryProvider,
+      convertToMultiRepositoryProvider
     ),
     commands.registerCommand("extension.wrap-blocbuilder", wrapWithBlocBuilder),
     commands.registerCommand(
       "extension.wrap-blocselector",
-      wrapWithBlocSelector,
+      wrapWithBlocSelector
     ),
     commands.registerCommand(
       "extension.wrap-bloclistener",
-      wrapWithBlocListener,
+      wrapWithBlocListener
     ),
     commands.registerCommand(
       "extension.wrap-blocconsumer",
-      wrapWithBlocConsumer,
+      wrapWithBlocConsumer
     ),
     commands.registerCommand(
       "extension.wrap-blocprovider",
-      wrapWithBlocProvider,
+      wrapWithBlocProvider
     ),
     commands.registerCommand(
       "extension.wrap-repositoryprovider",
-      wrapWithRepositoryProvider,
+      wrapWithRepositoryProvider
     ),
     languages.registerCodeActionsProvider(
       DART_MODE,
-      new BlocCodeActionProvider(),
-    ),
+      new BlocCodeActionProvider()
+    )
   );
 }

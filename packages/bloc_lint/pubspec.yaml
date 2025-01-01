@@ -9,7 +9,12 @@ topics: [bloc, state-management, lint]
 funding: [https://github.com/sponsors/felangel]
 
 environment:
-  sdk: ">=2.12.0 <4.0.0"
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  analyzer: ^7.0.0
+  shelf: ^1.0.0
+  shelf_router: ^1.1.4
 
 screenshots:
   - description: The bloc_lint package logo.
